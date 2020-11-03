@@ -36,8 +36,8 @@ class sudoku:
                 color=Blue
                 border=1
 
-            pg.draw.line(self.Window,color,(offset+self.size*(i),offset),(self.size*i+offset,offset+self.size*9),width=border)
-            pg.draw.line(self.Window,color,(offset,offset+self.size*(i)),(offset+self.size*9,self.size*i+offset),width=border)
+            pg.draw.line(self.Window,color,(offset+self.size*(i),offset),(self.size*i+offset,offset+self.size*9),border)
+            pg.draw.line(self.Window,color,(offset,offset+self.size*(i)),(offset+self.size*9,self.size*i+offset),border)
 
 
         #Putting Numbers
@@ -77,19 +77,16 @@ class sudoku:
         return True
 
     def solve(self,row,col):
-        print(row,col)
         if row==8 and col==9:
             yield True
             return
         if col==9:
             row+=1
             col=0
-            print("col should be zero",row,col)
         if(self.board[row][col]>0):
             yield from self.solve(row,col+1)
             return
         for i in range(1,10):
-            print("inside a loop",row,col,i)
             if (self.possible(row,col,i)):
                 self.board[row][col]=i
                 if(yield from self.solve(row,col+1)):
