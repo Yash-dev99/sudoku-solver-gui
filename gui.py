@@ -1,7 +1,7 @@
 
 import pygame as pg
 import time
-
+from logic import *
 
 #Global Constant
 window_Height=700
@@ -15,9 +15,9 @@ Window=pg.display.set_mode((window_Height,window_Width))
 White=(255,255,255)
 Black=(0,0,0)
 Red=(255,0,0)
+Blue=(0,0,255)
 
-
-def Event_handler():
+def Event_handler(Sudoku):
     """
     This Function Handel all the event thing
     Argument: Null
@@ -27,34 +27,21 @@ def Event_handler():
         if event.type==pg.QUIT:
             pg.quit()
             quit()
-class sudoku:
-    """
-    This class will handel everything related to sudoku
-    """
-    def __init__(self,offset,board=[[0 for i in range(9)] for j in range(9)],size=50,color=Black,active_color=Red):
-        self.offset=offset
-        self.board=board
-        self.size=size
-        self.color=color
-        self.active_color=active_color
 
-    def display(self):
-        """
-        Display sudoku on screen
-        """
-        #Making Lines
+        if event.type==pg.KEYDOWN:
+            # Arrow key handler
+            if event.key==pg.K_DOWN:
+                Sudoku.change_active_pos(0,1)
+            elif event.key==pg.K_UP:
+                Sudoku.change_active_pos(0,-1)
+            elif event.key==pg.K_LEFT:
+                Sudoku.change_active_pos(-1,0)
+            elif event.key==pg.K_RIGHT:
+                Sudoku.change_active_pos(1,0)
+            # Changing val
+            if 48<=event.key<=58:
+                Sudoku.change_val(event.key-48)
 
-        #Putting Numbers
-        offset=self.offset
-        size=self.size
-        board=self.board
-
-        def pos(index):
-            return index*size+offset
-
-        for i in range(9):
-            for j in range(9):
-                text(str(board[i][j]),pos(i),pos(j),Font_size=size).Message_display()
 class text:
     """
     making text a object
@@ -89,7 +76,7 @@ def mainloop():
     """
     pg.display.set_caption("SUDOKU SOLVER")
     title=text("Sudoku_Solver",50,20,Font_size=12)
-    Sudoku=sudoku(150)
+    Sudoku=sudoku(150,Window)
     while True:
         """
         1. Displaying Things
@@ -100,7 +87,7 @@ def mainloop():
         title.Message_display()
         Sudoku.display()
 
-        Event_handler()
+        Event_handler(Sudoku)
 
 
         pg.display.update()

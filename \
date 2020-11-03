@@ -63,7 +63,7 @@ class sudoku:
 
     def change_val(self,val):
         self.board[self.active_pos_x][self.active_pos_y]=val
-
+    
     def possible(self,x,y,val):
         for i in range(9):
             if self.board[x][i]==val or self.board[i][y]:
@@ -85,7 +85,7 @@ class sudoku:
                         if possible(i,j,k):
                             self.board[i][j]=k
                             self.board[i][j]=0
-
+        
 
 
 
