@@ -69,23 +69,25 @@ class sudoku:
             if self.board[x][i]==val or self.board[i][y]:
                 return False
         startrow=x-x%3
-        stratcol=y-y%3
+        startcol=y-y%3
         for i in range(3):
             for j in range(3):
                 if self.board[startrow+i][startcol+j]==val:
                     return False
         return True
 
-
-    def solve(self):
-        for i in range(9):
-            for j in range(9):
-                for k in range(1,10):
-                    if self.board[i][j]==0:
-                        if possible(i,j,k):
-                            self.board[i][j]=k
-                            self.board[i][j]=0
-
-
-
-
+    def solve(self,row=0,col=0):
+        if row==8 and col==9:
+            yield True
+        if col==9:
+            row+=1
+            col=0
+        if(self.board[row][col]>0):
+            yield from self.solve(row,col+1)
+        for i in range(1,10):
+            if (self.possible(row,col,i)):
+                self.board[row][col]=i
+                if(yield from self.solve(row,col+1)):
+                    yield True
+            self.board[row][col]=0
+        yield False

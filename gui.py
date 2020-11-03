@@ -7,8 +7,8 @@ from logic import *
 window_Height=700
 window_Width=700
 Window=pg.display.set_mode((window_Height,window_Width))
-
-
+flag=False
+sol=None
 
 
 #Color
@@ -23,6 +23,7 @@ def Event_handler(Sudoku):
     Argument: Null
     return: Null
     """
+    global flag
     for event in pg.event.get():
         if event.type==pg.QUIT:
             pg.quit()
@@ -41,6 +42,10 @@ def Event_handler(Sudoku):
             # Changing val
             if 48<=event.key<=58:
                 Sudoku.change_val(event.key-48)
+            if event.key==pg.K_RETURN:
+                global sol
+                sol=Sudoku.solve()
+                flag=True
 
 class text:
     """
@@ -77,6 +82,8 @@ def mainloop():
     pg.display.set_caption("SUDOKU SOLVER")
     title=text("Sudoku_Solver",50,20,Font_size=12)
     Sudoku=sudoku(150,Window)
+    global flag
+    global sol
     while True:
         """
         1. Displaying Things
@@ -86,6 +93,8 @@ def mainloop():
         Window.fill(White)
         title.Message_display()
         Sudoku.display()
+        if flag:
+            print(next(sol))
 
         Event_handler(Sudoku)
 
