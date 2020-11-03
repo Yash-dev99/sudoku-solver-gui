@@ -44,7 +44,7 @@ def Event_handler(Sudoku):
                 Sudoku.change_val(event.key-48)
             if event.key==pg.K_RETURN:
                 global sol
-                sol=Sudoku.solve()
+                sol=Sudoku.solve(0,0)
                 flag=True
 
 class text:
@@ -94,7 +94,8 @@ def mainloop():
         title.Message_display()
         Sudoku.display()
         if flag:
-            print(next(sol))
+            if next(sol):
+                flag=False
 
         Event_handler(Sudoku)
 

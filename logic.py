@@ -66,7 +66,7 @@ class sudoku:
 
     def possible(self,x,y,val):
         for i in range(9):
-            if self.board[x][i]==val or self.board[i][y]:
+            if self.board[x][i]==val or self.board[i][y]==val:
                 return False
         startrow=x-x%3
         startcol=y-y%3
@@ -76,18 +76,25 @@ class sudoku:
                     return False
         return True
 
-    def solve(self,row=0,col=0):
+    def solve(self,row,col):
+        print(row,col)
         if row==8 and col==9:
             yield True
+            return
         if col==9:
             row+=1
             col=0
+            print("col should be zero",row,col)
         if(self.board[row][col]>0):
             yield from self.solve(row,col+1)
+            return
         for i in range(1,10):
+            print("inside a loop",row,col,i)
             if (self.possible(row,col,i)):
                 self.board[row][col]=i
                 if(yield from self.solve(row,col+1)):
                     yield True
+                    return
             self.board[row][col]=0
         yield False
+        return
