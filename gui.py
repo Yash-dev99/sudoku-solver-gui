@@ -7,8 +7,8 @@ from logic import *
 window_Height=700
 window_Width=700
 Window=pg.display.set_mode((window_Height,window_Width))
-flag=False
-sol=None
+flag=False  #Flag for next in backtracking
+sol=None    #going to be a genaretor
 
 
 #Color
@@ -16,6 +16,7 @@ White=(255,255,255)
 Black=(0,0,0)
 Red=(255,0,0)
 Blue=(0,0,255)
+Orange=(255,69,0)
 
 def Event_handler(Sudoku):
     """
@@ -77,6 +78,35 @@ class text:
         TextRect.center = (self.x,self.y)
         Window.blit(TextSurf, TextRect)
 
+class Button:
+    """
+    Button class, Since pygame not have
+    """
+    def __init__(self,text,pos,Length,Width,function,color_on_arrow=Orange,color=Red):
+        self.color_on_arrow=color_on_arrow
+        self.color=color
+        self.pos=pos
+        self.Length=Length
+        self.Width=Width
+        self.function=function
+        pass
+
+    def active(self):
+        self.function()
+
+    def display(self):
+        mouse_pos=pg.mouse.get_pos()
+        pos=self.pos
+        if pos[0]<=mouse_pos[0]<=pos[0]+self.Width and  pos[1]<=mouse_pos[1]<=pos[1]+self.Length:
+            color=self.color_on_arrow
+        else:
+            color=self.color
+        pg.draw.rect(Window,color,(pos[0],pos[1],pos[0]+self.width,pos[1]+self.Length))
+        self.text.Message_display()
+
+
+
+
 
 def mainloop():
     """
@@ -85,6 +115,7 @@ def mainloop():
     pg.display.set_caption("SUDOKU SOLVER")
     title=text("Sudoku_Solver",50,20,Font_size=12)
     Sudoku=sudoku(150,Window)
+    authour=text("Made by Yash Kumar Singh",600,650,Font_size=12)
     global flag
     global sol
     while True:
@@ -95,6 +126,7 @@ def mainloop():
         """
         Window.fill(White)
         title.Message_display()
+        authour.Message_display()
         Sudoku.display()
         if flag:
             if next(sol):
