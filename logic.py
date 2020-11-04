@@ -1,13 +1,13 @@
 import pygame as pg
 import time
-from gui import text
+from gui import Text
 
 #Color
 White=(255,255,255)
 Black=(0,0,0)
 Red=(255,0,0)
 Blue=(0,0,255)
-
+Orange=(255,69,0)
 class sudoku:
     """
     This class will handel everything related to sudoku
@@ -48,16 +48,14 @@ class sudoku:
         def pos(index):
             return index*size+offset
 
+        pg.draw.rect(self.Window,self.active_color,((self.active_pos_x+1)*size+offset//2,(self.active_pos_y+1)*size+offset//2,size,size))
         for i in range(9):
             for j in range(9):
                 if board[i][j]==0:
                     string=''
                 else:
                     string=str(board[i][j])
-                if (i,j)==(self.active_pos_x,self.active_pos_y):
-                    text(string,pos(i),pos(j),Font_size=size,color=self.active_color).Message_display()
-                else:
-                    text(string,pos(i),pos(j),Font_size=size).Message_display()
+                Text(string,pos(i),pos(j),Font_size=size).Message_display()
 
     def change_active_pos(self,cx,cy):
         """
@@ -96,6 +94,11 @@ class sudoku:
         return True
 
     def solve(self,row,col):
+        """
+        BackTracking algorithm with is a genrator, so we can print every recursion
+        parameter: row, col
+        return : bool
+        """
         if row==9 and col==8:
             yield True
             return
@@ -114,3 +117,10 @@ class sudoku:
             self.board[row][col]=0
         yield False
         return
+
+    def make_question(self):
+        """
+        Make new Sudoku Question
+
+        """
+        pass

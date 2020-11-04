@@ -18,7 +18,7 @@ Red=(255,0,0)
 Blue=(0,0,255)
 Orange=(255,69,0)
 
-def Event_handler(Sudoku):
+def Event_handler(Sudoku,solve_button):
     """
     This Function Handel all the event thing
     Argument: Null
@@ -50,8 +50,11 @@ def Event_handler(Sudoku):
                 else:
                     sol=Sudoku.solve(0,0)
                     flag=True
+        if event.type == pg.MOUSEBUTTONUP:
+            if solve_button.On_button():
+                solve_button.active()
 
-class text:
+class Text:
     """
     making text a object
     """
@@ -82,27 +85,33 @@ class Button:
     """
     Button class, Since pygame not have
     """
-    def __init__(self,text,pos,Length,Width,function,color_on_arrow=Orange,color=Red):
+    def __init__(self,text,pos,Length,Width,function,text_color=Black,color_on_arrow=Orange,color=Red):
         self.color_on_arrow=color_on_arrow
         self.color=color
         self.pos=pos
-        self.Length=Length
-        self.Width=Width
+        self.Length=max(Length,len(text)*Width)
+        self.Width=max(Width,10)
         self.function=function
-        pass
+        self.text=Text(text,pos[0]+self.Length//2,pos[1]+self.Width//2,color=text_color,Font_size=self.Width)
 
     def active(self):
-        self.function()
+        global sol
+        global flag
+        flag=True
+        sol=self.function(0,0)
 
     def display(self):
-        mouse_pos=pg.mouse.get_pos()
         pos=self.pos
-        if pos[0]<=mouse_pos[0]<=pos[0]+self.Width and  pos[1]<=mouse_pos[1]<=pos[1]+self.Length:
+        if self.On_button():
             color=self.color_on_arrow
         else:
             color=self.color
-        pg.draw.rect(Window,color,(pos[0],pos[1],pos[0]+self.width,pos[1]+self.Length))
+        pg.draw.rect(Window,color,(pos[0],pos[1],self.Length,self.Width))
         self.text.Message_display()
+    def On_button(self):
+        mouse_pos=pg.mouse.get_pos()
+        pos=self.pos
+        return pos[0]<=mouse_pos[0]<=pos[0]+self.Length  and  pos[1]<=mouse_pos[1]<=pos[1]+self.Width
 
 
 
@@ -113,9 +122,10 @@ def mainloop():
     Main loop of this gui
     """
     pg.display.set_caption("SUDOKU SOLVER")
-    title=text("Sudoku_Solver",50,20,Font_size=12)
-    Sudoku=sudoku(150,Window)
-    authour=text("Made by Yash Kumar Singh",600,650,Font_size=12)
+    title=Text("Sudoku_Solver",50,20,Font_size=12)
+    Sudoku=sudoku(150,Window,active_color=Orange)
+    authour=Text("Made by Yash Kumar Singh",600,650,Font_size=12)
+    solve_button=Button("Solve",(20,650),0,20,Sudoku.solve)
     global flag
     global sol
     while True:
@@ -128,11 +138,12 @@ def mainloop():
         title.Message_display()
         authour.Message_display()
         Sudoku.display()
+        solve_button.display()
         if flag:
             if next(sol):
                 flag=False
 
-        Event_handler(Sudoku)
+        Event_handler(Sudoku,solve_button)
 
 
         pg.display.update()
