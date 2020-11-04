@@ -1,6 +1,5 @@
 import pygame as pg
 import time
-from gui import Text
 
 #Color
 White=(255,255,255)
@@ -8,6 +7,39 @@ Black=(0,0,0)
 Red=(255,0,0)
 Blue=(0,0,255)
 Orange=(255,69,0)
+
+
+class Text:
+    """
+    making text a object
+    """
+
+    def __init__(self,text,text_x,text_y,window,color=Black,Font='freesansbold.ttf',Font_size=115):
+        self.text=text
+        self.Font=Font
+        self.Font_size=Font_size
+        self.color=color
+        self.x=text_x
+        self.y=text_y
+        self.window=window
+
+
+    def Message_display(self):
+        """
+        Display Text on Window
+        contain Default
+        Argument: text(str),Font(str),Font_size(int)
+        return: Null
+        """
+
+        textSurface = pg.font.Font(self.Font,self.Font_size).render(self.text, True,self.color)
+        TextSurf, TextRect =textSurface, textSurface.get_rect()
+        TextRect.center = (self.x,self.y)
+        self.window.blit(TextSurf, TextRect)
+
+
+    def change_text(self,text):
+        self.text=text
 class sudoku:
     """
     This class will handel everything related to sudoku
@@ -55,7 +87,7 @@ class sudoku:
                     string=''
                 else:
                     string=str(board[i][j])
-                Text(string,pos(i),pos(j),Font_size=size).Message_display()
+                Text(string,pos(i),pos(j),self.Window,Font_size=size).Message_display()
 
     def change_active_pos(self,cx,cy):
         """
