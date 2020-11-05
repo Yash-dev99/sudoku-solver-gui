@@ -8,6 +8,35 @@ Red=(255,0,0)
 Blue=(0,0,255)
 Orange=(255,69,0)
 
+class Button:
+    """
+    Button class, Since pygame not have
+    """
+    def __init__(self,text,pos,Length,Width,function,Window,text_color=Black,color_on_arrow=Orange,color=Red):
+        self.color_on_arrow=color_on_arrow
+        self.color=color
+        self.pos=pos
+        self.Length=max(Length,len(text)*Width)
+        self.Width=max(Width,10)
+        self.function=function
+        self.text=Text(text,pos[0]+self.Length//2,pos[1]+self.Width//2,Window,color=text_color,Font_size=self.Width)
+        self.Window=Window
+
+    def active(self):
+        return self.function()
+
+    def display(self):
+        pos=self.pos
+        if self.On_button():
+            color=self.color_on_arrow
+        else:
+            color=self.color
+        pg.draw.rect(self.Window,color,(pos[0],pos[1],self.Length,self.Width))
+        self.text.Message_display()
+    def On_button(self):
+        mouse_pos=pg.mouse.get_pos()
+        pos=self.pos
+        return pos[0]<=mouse_pos[0]<=pos[0]+self.Length  and  pos[1]<=mouse_pos[1]<=pos[1]+self.Width
 
 class Text:
     """
@@ -53,6 +82,10 @@ class sudoku:
         self.active_pos_x=active_pos[0]
         self.active_pos_y=active_pos[1]
         self.Window=window
+        self.Cellsbutton=[[Button("",(self.pos(i)-self.size//2,self.pos(j)-self.size//2),self.size,self.size,self.change_active_pos_arrow,self.Window) for i in range(9)] for j in range(9)]
+
+    def pos(self,index):
+        return index*self.size+self.offset
 
     def display(self):
         """
@@ -77,8 +110,6 @@ class sudoku:
         size=self.size
         board=self.board
         #Just a local funtion for positions
-        def pos(index):
-            return index*size+offset
 
         pg.draw.rect(self.Window,self.active_color,((self.active_pos_x+1)*size+offset//2,(self.active_pos_y+1)*size+offset//2,size,size))
         for i in range(9):
@@ -87,7 +118,7 @@ class sudoku:
                     string=''
                 else:
                     string=str(board[i][j])
-                Text(string,pos(i),pos(j),self.Window,Font_size=size).Message_display()
+                Text(string,self.pos(i),self.pos(j),self.Window,Font_size=size).Message_display()
 
     def change_active_pos(self,cx,cy):
         """
@@ -99,6 +130,9 @@ class sudoku:
         self.active_pos_y+=cy
         self.active_pos_x=max(min(8,self.active_pos_x),0)
         self.active_pos_y=max(min(8,self.active_pos_y),0)
+    def change_active_pos_arrow(self,x,y):
+        self.active_pos_x=x
+        self.active_pos_y=y
 
     def change_val(self,val):
         """
@@ -114,6 +148,8 @@ class sudoku:
         parameter: position of cell, value
         return: bool
         """
+        if val==0:
+            return True
         for i in range(9):
             if self.board[x][i]==val or self.board[i][y]==val:
                 return False
@@ -125,7 +161,7 @@ class sudoku:
                     return False
         return True
 
-    def solve(self,row,col):
+    def solve(self,row=0,col=0):
         """
         BackTracking algorithm with is a genrator, so we can print every recursion
         parameter: row, col
@@ -156,3 +192,4 @@ class sudoku:
 
         """
         pass
+

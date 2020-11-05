@@ -1,7 +1,7 @@
 
 import pygame as pg
 import time
-from logic import sudoku,Text
+from logic import sudoku,Text,Button
 
 #Global Constant
 window_Height=700
@@ -57,11 +57,22 @@ def Event_handler(Sudoku,solve_button,strike):
                 if sol!=None:
                     flag=True
                 else:
-                    sol=Sudoku.solve(0,0)
+                    sol=Sudoku.solve()
                     flag=True
         if event.type == pg.MOUSEBUTTONUP:
+            outFlag=False
+            for i in range(9):
+                for j in range(9):
+                    if(Sudoku.Cellsbutton[i][j].On_button()):
+                        Sudoku.change_active_pos_arrow(j,i)
+                        #outFlag=True
+                        #break
+                #if outFlag:
+                    #break
+
             if solve_button.On_button():
-                solve_button.active()
+                sol=solve_button.active()
+                flag=True
 
 def GameOver():
     Text("Game Over",window_Width//2,window_Height//2,Window).Message_display()
@@ -91,38 +102,6 @@ class Strikes:
         if self.strikes>3:
             GameOver()
 
-
-class Button:
-    """
-    Button class, Since pygame not have
-    """
-    def __init__(self,text,pos,Length,Width,function,text_color=Black,color_on_arrow=Orange,color=Red):
-        self.color_on_arrow=color_on_arrow
-        self.color=color
-        self.pos=pos
-        self.Length=max(Length,len(text)*Width)
-        self.Width=max(Width,10)
-        self.function=function
-        self.text=Text(text,pos[0]+self.Length//2,pos[1]+self.Width//2,Window,color=text_color,Font_size=self.Width)
-
-    def active(self):
-        global sol
-        global flag
-        flag=True
-        sol=self.function(0,0)
-
-    def display(self):
-        pos=self.pos
-        if self.On_button():
-            color=self.color_on_arrow
-        else:
-            color=self.color
-        pg.draw.rect(Window,color,(pos[0],pos[1],self.Length,self.Width))
-        self.text.Message_display()
-    def On_button(self):
-        mouse_pos=pg.mouse.get_pos()
-        pos=self.pos
-        return pos[0]<=mouse_pos[0]<=pos[0]+self.Length  and  pos[1]<=mouse_pos[1]<=pos[1]+self.Width
 
 
 def Time_format(time):
@@ -154,7 +133,7 @@ def mainloop():
     title=Text("Sudoku_Solver",50,20,Window,Font_size=12)
     Sudoku=sudoku(150,Window,active_color=Orange,board=[[0 for i in range(9)]for j in range(9)])
     authour=Text("Made by Yash Kumar Singh",600,650,Window,Font_size=12)
-    solve_button=Button("Solve",(20,650),0,20,Sudoku.solve)
+    solve_button=Button("Solve",(20,650),0,20,Sudoku.solve,Window)
     timer=Text("",650,20,Window,Font_size=12)
     strike=Strikes()
     while True:
