@@ -64,17 +64,20 @@ def Event_handler(Sudoku,solve_button,strike):
             for i in range(9):
                 for j in range(9):
                     if(Sudoku.Cellsbutton[i][j].On_button()):
-                        Sudoku.change_active_pos_arrow(j,i)
-                        #outFlag=True
-                        #break
-                #if outFlag:
-                    #break
+                        Sudoku.change_active_pos_arrow(i,j)
+                        outFlag=True
+                        break
+                if outFlag:
+                    break
 
             if solve_button.On_button():
                 sol=solve_button.active()
                 flag=True
 
 def GameOver():
+    """
+    Function for Game Over
+    """
     Text("Game Over",window_Width//2,window_Height//2,Window).Message_display()
     pg.display.update()
     while True:
@@ -88,6 +91,9 @@ def GameOver():
 
 
 class Strikes:
+    """
+    Display Strikes XX
+    """
 
     def __init__(self):
         self.strikes=0
@@ -105,6 +111,9 @@ class Strikes:
 
 
 def Time_format(time):
+    """
+    Formate Second in H:M:S
+    """
     time=int(time)
     seconds=time%60
     time//=60
