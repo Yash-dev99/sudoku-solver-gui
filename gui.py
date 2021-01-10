@@ -1,4 +1,3 @@
-
 import pygame as pg
 import time
 from logic import sudoku,Text,Button
@@ -18,6 +17,23 @@ Black=(0,0,0)
 Red=(255,0,0)
 Blue=(0,0,255)
 Orange=(255,69,0)
+
+
+
+# question
+SudokuQues=[[0,2,6,0,0,1,0,0,0],
+            [3,0,0,0,0,0,2,0,0],
+            [0,0,0,0,0,3,1,0,0],
+            [4,0,0,0,0,0,0,1,0],
+            [0,0,3,2,0,0,7,0,0],
+            [0,0,1,0,9,0,0,0,0],
+            [0,8,9,0,7,0,0,0,1],
+            [6,0,0,0,0,0,0,0,0],
+            [0,0,0,9,6,0,3,0,8],
+            ]
+
+
+
 
 def Event_handler(Sudoku,solve_button,strike):
     """
@@ -140,7 +156,7 @@ def mainloop():
 
     pg.display.set_caption("SUDOKU SOLVER")
     title=Text("Sudoku_Solver",50,20,Window,Font_size=12)
-    Sudoku=sudoku(150,Window,active_color=Orange,board=[[0 for i in range(9)]for j in range(9)])
+    Sudoku=sudoku(150,Window,active_color=Orange,board=SudokuQues)
     authour=Text("Made by Yash Kumar Singh",600,650,Window,Font_size=12)
     solve_button=Button("Solve",(20,650),0,20,Sudoku.solve,Window)
     timer=Text("",650,20,Window,Font_size=12)
@@ -170,4 +186,3 @@ def mainloop():
 
         pg.display.update()
         pg.time.Clock().tick(60)
-
